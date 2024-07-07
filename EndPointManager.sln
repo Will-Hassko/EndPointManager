@@ -5,9 +5,10 @@ VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EndPointManager", "EndPointManager.csproj", "{005CEA6A-D4B2-4CE7-B7E8-C8C5E2E37585}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EndPointTests", "..\EndPointTests\EndPointTests.csproj", "{13775C22-0AFF-46ED-8609-23DEB7C34B13}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestEndPoint", "TestEndPoint\TestEndPoint.csproj", "{7D2FF910-E32C-49C2-997D-2A5A4D7876A7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{005CEA6A-D4B2-4CE7-B7E8-C8C5E2E37585} = {005CEA6A-D4B2-4CE7-B7E8-C8C5E2E37585}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +20,6 @@ Global
 		{005CEA6A-D4B2-4CE7-B7E8-C8C5E2E37585}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{005CEA6A-D4B2-4CE7-B7E8-C8C5E2E37585}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{005CEA6A-D4B2-4CE7-B7E8-C8C5E2E37585}.Release|Any CPU.Build.0 = Release|Any CPU
-		{13775C22-0AFF-46ED-8609-23DEB7C34B13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{13775C22-0AFF-46ED-8609-23DEB7C34B13}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{13775C22-0AFF-46ED-8609-23DEB7C34B13}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{13775C22-0AFF-46ED-8609-23DEB7C34B13}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7D2FF910-E32C-49C2-997D-2A5A4D7876A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7D2FF910-E32C-49C2-997D-2A5A4D7876A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D2FF910-E32C-49C2-997D-2A5A4D7876A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
