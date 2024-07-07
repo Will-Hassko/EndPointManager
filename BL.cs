@@ -10,6 +10,7 @@ namespace EndPointManager
 
     public class BL : IAction
     {
+        // Acting as data repository
         private List<EndPoint> _endPoints;
 
         public BL()
@@ -18,7 +19,7 @@ namespace EndPointManager
         }
         public void GenerateMockList()
         {
-            
+            // Data to fast generate, using insert function to validate duplicated items
             InsertEndPoint("SN00000001", ((Models)16).ToString(), 2196, "V 1.0.9.53", 1);
             InsertEndPoint("SN00000004", ((Models)18).ToString(), 4093, "V 1.0.9.53", 2);
             InsertEndPoint("SN00000007", ((Models)16).ToString(), 2552, "V 1.0.9.53", 2);
@@ -54,9 +55,7 @@ namespace EndPointManager
             // Validate if Model is valid
             Enum.TryParse(meterModelId, out Models modelId);
             if (!Enum.IsDefined(typeof(Models), modelId))
-            {
                 throw new Exception("Model invalid");
-            }
 
             // Validate negative number for meter number
             if (meterNumber < 0)
@@ -70,21 +69,18 @@ namespace EndPointManager
 
             // Validate Switch State
             if (!Enum.IsDefined(typeof(States), switchState))
-            {
                 throw new Exception("Invalid Switch State");
-            }
 
             // Validate Existing Serial Number
-            if (getEndPoint(serialNumber, true) != null)
-            {
+            if (FindEndPoint(serialNumber, true) != null)
                 throw new Exception("Serial Number already in use");
-            }
             
             _endPoints.Add(new EndPoint(serialNumber, modelId, meterNumber, meterFirmwareVersion, switchState));
 
             return 1;
         }
-        public EndPoint getEndPoint(string serialNumber, bool checking = false)
+        // Utilizing same function to check for existing serial number and to retrieve an item
+        public EndPoint FindEndPoint(string serialNumber, bool checking = false)
         {
             EndPoint endPoint = _endPoints.Where(w => w.SerialNumber == serialNumber).FirstOrDefault();
 
@@ -97,11 +93,9 @@ namespace EndPointManager
         public int EditEndPoint(string serialNumber, int newState)
         {
 
-            int index = _endPoints.IndexOf(getEndPoint(serialNumber));
+            int index = _endPoints.IndexOf(FindEndPoint(serialNumber));
             if (!Enum.IsDefined(typeof(States), newState))
-            {
                 throw new Exception("Invalid Switch State");
-            }
 
             if (index == -1)
                 throw new Exception("Fail to edit Switch State.");
@@ -113,7 +107,7 @@ namespace EndPointManager
 
         public int DeleteEndPoint(string serialNumber)
         {
-            EndPoint endPoint = getEndPoint(serialNumber);
+            EndPoint endPoint = FindEndPoint(serialNumber);
             _endPoints.Remove(endPoint);
 
             return 1;

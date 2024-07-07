@@ -16,14 +16,15 @@ namespace EndPointManager
             string consoleMsg = string.Empty;
             string serialNumber = string.Empty;
             int switchState;
-
+            
+            // Loop to always return to main menu
             while (optionSelected != 6)
             {
                 consoleMsg = string.Empty;
                 Console.ResetColor();
 
-                Console.WriteLine("Bem-Vindo ao End Point Manager!" + Environment.NewLine);
-                Console.WriteLine("Informe o número da opção desejada:" + Environment.NewLine);
+                Console.WriteLine("Welcome to End Point Manager!" + Environment.NewLine);
+                Console.WriteLine("Input a number to select an action:" + Environment.NewLine);
                 Console.WriteLine("1) Insert a new endpoint");
                 Console.WriteLine("2) Edit an existing endpoint");
                 Console.WriteLine("3) Delete an existing endpoint");
@@ -31,7 +32,7 @@ namespace EndPointManager
                 Console.WriteLine("5) Find an End Point");
                 Console.WriteLine("6) Exit" + Environment.NewLine);
                 Console.WriteLine("7) Generate Mock List" + Environment.NewLine);
-                Console.Write("Opção: ");
+                Console.Write("Number: ");
 
                 try
                 {
@@ -52,17 +53,18 @@ namespace EndPointManager
                             consoleMsg = Delete(ref bl);
                             break;
 
-                        case 4: // list all
+                        case 4: // List all end points
                             consoleMsg = ListAll(ref bl);                           
                             break;
-                        case 5: // find
+                        case 5: // Find an end point
                             consoleMsg = Find(ref bl);                           
                             break;
 
                         case 6: // Exit
+                            // Confirming exit
                             if (Exit()== "Y")
                                 continue;
-                            else
+                            else // Canceling the exit
                                 optionSelected = 0;
                             break;
 
@@ -70,7 +72,7 @@ namespace EndPointManager
                             consoleMsg = GenerateMockList(ref bl);
                             break;
                         default:
-                            throw new Exception("Opção inválida");
+                            throw new Exception("Invalid option");
                     }
 
                     if (consoleMsg.Length > 0)
@@ -85,6 +87,7 @@ namespace EndPointManager
                 }
                 catch (Exception ex)
                 {
+                    // All validations were handled here
                     Console.Clear();
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(Environment.NewLine + ex.Message + Environment.NewLine);
@@ -119,9 +122,9 @@ namespace EndPointManager
             Console.Clear();
             Console.Write("Inform Serial Number: ");
             string serialNumber = Console.ReadLine();
-            // Poderia validar nesse momento o serial, uma vez que o mesmo não poderá ser editado nesta
-            // aplicação console, evitando a necessidade de preencher demais campos
-            // Porém para fins de demonstração, vou deixar as validações para a camada de BL realizar.
+            // Could validate the serial right away, but to provide more data to handle the tests I prefer to
+            // follow the flow of the console, additionaly I will need to do more loops in the console to await for 
+            // a valid data
             Console.WriteLine("");
             Console.Write("Inform Meter Model ID: ");
             string modelId = Console.ReadLine();
@@ -150,7 +153,7 @@ namespace EndPointManager
             Console.Write("Inform Serial Number: ");
             string serialNumber = Console.ReadLine();
 
-            EndPoint edit = bl.getEndPoint(serialNumber);
+            EndPoint edit = bl.FindEndPoint(serialNumber);
 
             Console.Clear();
             Console.WriteLine("Serial: " + edit.SerialNumber +
@@ -176,23 +179,20 @@ namespace EndPointManager
             Console.Write("Inform Serial Number: ");
             string serialNumber = Console.ReadLine();
 
-            EndPoint delete = bl.getEndPoint(serialNumber);
+            EndPoint delete = bl.FindEndPoint(serialNumber);
 
             Console.Clear();
 
             string deleting = string.Empty;
+            // Loop to await a valid confirmation (Y/N)
             while (true)
             {
                 Console.Clear();
                 Console.WriteLine(Environment.NewLine +
                                   "Are you sure you want to delete this End Point? " +
-                                  Environment.NewLine +
-                                  "Serial: " + delete.SerialNumber +
-                                  " ,Model: " + ((Models)delete.MeterModelId).ToString() +
-                                  " ,Meter Number: " + delete.MeterNumber +
-                                  " ,Firmware Version: " + delete.MeterFirmwareVersion +
-                                  " , Switch State: " + ((States)delete.SwitchState).ToString() +
                                   Environment.NewLine);
+                printEndPoint(delete);
+                Console.WriteLine("");
                 Console.Write("Y/N :");
                 deleting = Console.ReadLine();
 
@@ -214,11 +214,7 @@ namespace EndPointManager
             List<EndPoint> endPoints = bl.getAllEndPoints();
             foreach (var endPoint in endPoints)
             {
-                Console.WriteLine("Serial: " + endPoint.SerialNumber +
-                                  " ,Model: " + ((Models)endPoint.MeterModelId).ToString() +
-                                  " ,Meter Number: " + endPoint.MeterNumber +
-                                  " ,Firmware Version: " + endPoint.MeterFirmwareVersion +
-                                  " , Switch State: " + ((States)endPoint.SwitchState).ToString());
+                printEndPoint(endPoint);
             }
 
             Console.ForegroundColor = ConsoleColor.DarkGreen;
@@ -230,22 +226,18 @@ namespace EndPointManager
             Console.Write("Inform Serial Number: ");
             string serialNumber = Console.ReadLine();
 
-            EndPoint find = bl.getEndPoint(serialNumber);
+            EndPoint find = bl.FindEndPoint(serialNumber);
 
             Console.Clear();
-
-            Console.WriteLine(Environment.NewLine +
-                                  "Serial: " + find.SerialNumber +
-                                  " ,Model: " + ((Models)find.MeterModelId).ToString() +
-                                  " ,Meter Number: " + find.MeterNumber +
-                                  " ,Firmware Version: " + find.MeterFirmwareVersion +
-                                  " , Switch State: " + ((States)find.SwitchState).ToString() +
-                                  Environment.NewLine);
+            Console.WriteLine("");
+            printEndPoint(find);
+            Console.WriteLine("");
             return string.Empty;
         }
         private static string Exit ()
         {
             string exiting = string.Empty;
+            // Loop to await a valid confirmation (Y/N)
             while (true)
             {
                 Console.Clear();
@@ -263,6 +255,15 @@ namespace EndPointManager
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             return "List inserted successfully";
+        }
+
+        private static void printEndPoint(EndPoint endPoint)
+        {
+            Console.WriteLine("Serial: " + endPoint.SerialNumber +
+                                  ", Model: " + ((Models)endPoint.MeterModelId).ToString() +
+                                  ", Meter Number: " + endPoint.MeterNumber +
+                                  ", Firmware Version: " + endPoint.MeterFirmwareVersion +
+                                  ", Switch State: " + ((States)endPoint.SwitchState).ToString());
         }
     }
 }

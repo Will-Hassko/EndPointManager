@@ -11,6 +11,7 @@ namespace EndPointManager
         int InsertEndPoint(string serialNumber, string meterModelId, int meterNumber, string meterFirmwareVersion, int switchState) => throw new NotImplementedException();
         int EditEndPoint(string serialNumber, int newState) => throw new NotImplementedException();
         int DeleteEndPoint(string serialNumber) => throw new NotImplementedException();
+        EndPoint FindEndPoint(string serialNumber, bool checking = false) => throw new NotImplementedException();
         List<EndPoint> getAllEndPoints() => throw new NotImplementedException();
     }
 }
